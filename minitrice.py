@@ -3,12 +3,13 @@ import sys
 import re
 
 def calculer(expression):
-    # Utilisation d'expressions régulières pour extraire les nombres et l'opérateur
-    match = re.search(r'(\d+(\.\d+)?)(\s*)([+\-*/])(\s*)(\d+(\.\d+)?)', expression)
+    # Utilisation d'expressions régulières pour s'assurer que l'expression est sous la forme "nombre opérateur nombre"
+    # et pour extraire les nombres et l'opérateur, peu importe les espaces autour de l'opérateur
+    match = re.fullmatch(r'\s*(\d+(\.\d+)?)\s*([+\-*/])\s*(\d+(\.\d+)?)\s*', expression)
     if not match:
-        return "Erreur: Veuillez entrer une expression valide (nombre opérateur nombre)."
+        return "Erreur: Veuillez entrer une expression valide sous la forme 'nombre opérateur nombre'."
     
-    nombre1, operateur, nombre2 = match.group(1), match.group(4), match.group(6)
+    nombre1, operateur, nombre2 = match.group(1), match.group(3), match.group(4)
     
     try:
         nombre1 = float(nombre1)
@@ -29,6 +30,7 @@ def calculer(expression):
         return nombre1 / nombre2
     else:
         return "Erreur: Opérateur non reconnu."
+
 
 def main():
     # Lecture de l'entrée standard si des données y sont présentes
