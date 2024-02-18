@@ -7,7 +7,8 @@ def calculer(expression):
     # et pour extraire les nombres et l'opérateur, peu importe les espaces autour de l'opérateur
     match = re.fullmatch(r'\s*(\d+(\.\d+)?)\s*([+\-*/])\s*(\d+(\.\d+)?)\s*', expression)
     if not match:
-        return "Erreur: Veuillez entrer une expression valide sous la forme 'nombre opérateur nombre'."
+        return "Erreur de syntaxe pour le calcul: f"{expression}"
+"
     
     nombre1, operateur, nombre2 = match.group(1), match.group(3), match.group(4)
     
