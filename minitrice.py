@@ -1,36 +1,50 @@
 #!/usr/bin/env python3
+
 import sys
 import re
 
 def calculer(expression):
-    # Utilisation d'expressions régulières pour s'assurer que l'expression est sous la forme "nombre opérateur nombre"
-    # et pour extraire les nombres et l'opérateur, peu importe les espaces autour de l'opérateur
-    match = re.fullmatch(r'\s*(\d+(\.\d+)?)\s*([+\-*/])\s*(\d+(\.\d+)?)\s*', expression)
+    # Utilisation d'expressions régulières pour extraire les nombres et l'opérateur
+    match = re.search(r'(\d+(\.\d+)?)(\s*)([+\-*/])(\s*)(\d+(\.\d+)?)', expression)
     if not match:
-        return "Erreur de syntaxe pour le calcul: f"{expression}"
-"
+        return "Erreur: Veuillez entrer une expression valide sous la forme 'nombre opérateur nombre'."
+
+    nombre1, operateur, nombre2 = match.group(1), match.group(4), match.group(6)
     
-    nombre1, operateur, nombre2 = match.group(1), match.group(3), match.group(4)
-    
-    try:
+    # Convertir les nombres en float ou int selon la présence d'un point décimal
+    if '.' in nombre1:
         nombre1 = float(nombre1)
-        nombre2 = float(nombre2)
-    except ValueError:
-        return "Erreur: Les nombres entrés sont invalides."
+    else:
+        nombre1 = int(nombre1)
     
-    # Réalisation du calcul selon l'opérateur
+    if '.' in nombre2:
+        nombre2 = float(nombre2)
+    else:
+        nombre2 = int(nombre2)
+
+    # Effectuer le calcul
     if operateur == '+':
-        return nombre1 + nombre2
+        resultat = nombre1 + nombre2
     elif operateur == '-':
-        return nombre1 - nombre2
+        resultat = nombre1 - nombre2
     elif operateur == '*':
-        return nombre1 * nombre2
+        resultat = nombre1 * nombre2
     elif operateur == '/':
         if nombre2 == 0:
             return "Erreur: Division par zéro."
-        return nombre1 / nombre2
+        resultat = nombre1 / nombre2
     else:
         return "Erreur: Opérateur non reconnu."
+
+    # Retourner le résultat formaté
+    if isinstance(resultat, float) and resultat.is_integer():
+        return str(int(resultat))  # Convertir en int si le résultat est un entier
+    elif isinstance(resultat, float):
+        return f"{resultat:.2f}"  # Conserver deux chiffres après la virgule si nécessaire
+    else:
+        return str(resultat)
+
+
 
 
 def main():
@@ -42,13 +56,14 @@ def main():
         # Mode interactif
         while True:
             try:
-                expression = input("Entrez votre calcul (ou tapez 'exit' pour quitter): ")
+                expression = input("> ")
                 if expression.lower() == 'exit':
                     break
                 resultat = calculer(expression)
                 print(resultat)
             except EOFError:
-                break
+                print("\nFin des calculs :)")
+                break  # Sortie propre du programme lors de la réception d'un EOF (Ctrl + D)
 
 if __name__ == "__main__":
     main()
