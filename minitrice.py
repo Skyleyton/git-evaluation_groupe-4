@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 import sys
+import re
 
 def calculer(expression):
-    # Séparation de l'expression en composantes
-    elements = expression.split()
-    if len(elements) != 3:
+    # Utilisation d'expressions régulières pour extraire les nombres et l'opérateur
+    match = re.search(r'(\d+(\.\d+)?)(\s*)([+\-*/])(\s*)(\d+(\.\d+)?)', expression)
+    if not match:
         return "Erreur: Veuillez entrer une expression valide (nombre opérateur nombre)."
     
-    nombre1, operateur, nombre2 = elements
+    nombre1, operateur, nombre2 = match.group(1), match.group(4), match.group(6)
     
     try:
         nombre1 = float(nombre1)
         nombre2 = float(nombre2)
     except ValueError:
         return "Erreur: Les nombres entrés sont invalides."
-
+    
     # Réalisation du calcul selon l'opérateur
     if operateur == '+':
         return nombre1 + nombre2
