@@ -1,0 +1,60 @@
+  GNU nano 6.2                                               testminitrice                                                         #!/usr/bin/env python3
+
+
+#!/usr/bin/env python3
+
+import sys
+
+def main():
+    """
+    Mini-calculatrice gérant l'entrée standard et les pipes.
+    """
+    try:
+        if not sys.stdin.isatty():
+            # Entrée via un pipe
+            lignes = sys.stdin.readlines()
+            for ligne in lignes:
+                # Vérification de la syntaxe
+                try:
+                    compile(ligne, '<string>', 'eval')
+                    # tente de compiler pour vérifier la syntaxe
+                    # Sans compilation certaines expressions arrivent à
+                    # être evaluer même avec es erreurs de syntaxe.
+                except SyntaxError:
+                    # Affichage comme dans la scénario
+                    print("Erreur de syntaxe pour le calcul:",f'"{ligne.strip()}"')
+                    sys.exit(1)
+
+                # Évaluation de l'expression
+                try:
+                    resultat = eval(ligne)
+                    print(f"{resultat}")
+                except ZeroDivisionError:
+                    print("Division par zéro")
+                    sys.exit(1)
+        else:
+            # Entrée interactive
+            while True:
+                # Saisie de l'expression
+                expression = input("> ")
+
+                # Vérification de la syntaxe
+                try:
+                    compile(expression, '<string>', 'eval')
+                except SyntaxError:
+                    print("Erreur de syntaxe pour le calcul:", expression.strip())
+                    continue  # Passer à l'expression suivante en cas d'erreur
+
+                # Évaluation de l'expression
+                try:
+                    resultat = eval(expression)
+                    print(f"{resultat}")
+                except ZeroDivisionError:
+                    print("Division par zéro impossible.")
+
+    except EOFError:
+        # Affichage du message d'au revoir
+        print("\nFin des calculs :)")
+
+if __name__ == "__main__":
+    main()
