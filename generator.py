@@ -14,10 +14,10 @@ def generer_expression(n):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python generator.py <nombre d'expressions>")
+        print("Veuillez saisir le nombre d'expressions à générer.")
     else:
         try:
             nombre_d_expressions = int(sys.argv[1])
             generer_expression(nombre_d_expressions)
         except ValueError:
-            print("Erreur: Le nombre d'expressions doit être un entier.")
+            print("Le nombre d'expressions doit être un entier.")

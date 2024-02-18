@@ -5,9 +5,9 @@ import re
 
 def calculer(expression):
     # Utilisation d'expressions régulières pour extraire les nombres et l'opérateur
-    match = re.search(r'(\d+(\.\d+)?)(\s*)([+\-*/])(\s*)(\d+(\.\d+)?)', expression)
+    match = re.fullmatch(r'(\d+(\.\d+)?)(\s*)([+\-*/])(\s*)(\d+(\.\d+)?)', expression)
     if not match:
-        return "Erreur: Veuillez entrer une expression valide sous la forme 'nombre opérateur nombre'."
+        return f"Erreur de syntaxe pour le calcul: \"{expression}\""
 
     nombre1, operateur, nombre2 = match.group(1), match.group(4), match.group(6)
     
@@ -43,9 +43,6 @@ def calculer(expression):
         return f"{resultat:.2f}"  # Conserver deux chiffres après la virgule si nécessaire
     else:
         return str(resultat)
-
-
-
 
 def main():
     # Lecture de l'entrée standard si des données y sont présentes
