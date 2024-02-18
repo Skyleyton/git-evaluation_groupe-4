@@ -25,4 +25,4 @@ for i in range(n):
 
     # L'expression qui va être générée.
     expression = str(nombre1) + random_op + str(nombre2)
-    print(expression)
+    print(expression, file=sys.stdout)
