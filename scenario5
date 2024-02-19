@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+
+import sys
+
+def minitrice():
+    try:
+        "Scénario 2: utilisation de echo"
+        if not sys.stdin.isatty():
+            # Entrée via un pipe
+            # Scénario 3: On doit prendre ligne par ligne 
+            # et faire l'evaluation à chaque fois
+            expressions = sys.stdin.readlines()
+            for expression in expressions:
+                # Scénario 4: Erreur de Syntaxe"
+                try:
+                    resultat = eval(expression)
+                except SyntaxError:
+                    print("Erreur de syntaxe pour le calcul: ",f'"{expression}"')
+                    # Le système va retourner le code d'erreur 1
+                    sys.exit(1)
+                    # Scénario 5: Division par zéro
+                except ZeroDivisionError:
+                    print("Division par zéro.")
+                    sys.exit(1)
+                print(resultat)
+        else:
+            "Scénario 1: Entrée intérative"
+            while True:
+                # Saisie expression
+                expression = input("> ")
+                # Evaluation de l'expression
+                # Scénario 4: Erreur de syntaxe
+                try:
+                    resultat = eval(expression)
+                except SyntaxError:
+                    print(f'Erreur de syntaxe pour le calcul: "{expression}"')
+                    # Le système va retourner le code d'erreur 1
+                    sys.exit(1)
+                    # Scénario 5: Divison par zéro
+                except ZeroDivisionError:
+                    print("Division par zéro.")
+                    sys.exit(1)
+                print(resultat)
+    except EOFError:
+        # Affichage du message d'au revoir
+        print("\nFin des calculs :)")
+        
+if __name__ =="__main__":
+    minitrice()
