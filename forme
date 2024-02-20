@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import sys
+
+def main():
+    """
+    Mini-calculatrice gérant l'entrée standard et les pipes.
+    """
+    try:
+        if not sys.stdin.isatty():
+            # Entrée via un pipe
+            lignes = sys.stdin.readlines()
+            for ligne in lignes:
+                # Supprimer les espaces au début et à la fin de la ligne
+                ligne = ligne.strip()
+                # Vérification de la syntaxe
+                try:
+                    compile(ligne, '<string>', 'eval')
+                    # tente de compiler pour vérifier la syntaxe
+                    # Sans compilation certaines expressions arrivent à
+                    # être évaluées même avec des erreurs de syntaxe.
+                except SyntaxError:
+                    # Affichage comme dans le scénario
+                    print("Erreur de syntaxe pour le calcul:", f'"{ligne}"')
+                    sys.exit(1)
+
+                # Évaluation de l'expression
+                try:
+                    resultat = eval(ligne)
+                    # Arrondir le résultat à deux chiffres après la virgule si nécessaire
+                    if isinstance(resultat, float):
+                        resultat = round(resultat, 2)
+                    print(f"{resultat}")
+                except ZeroDivisionError:
+                    print("Division par zéro")
+                    sys.exit(1)
+        else:
+            # Entrée interactive
+            while True:
+                # Saisie de l'expression
+                expression = input("> ")
+
+                # Supprimer les espaces au début et à la fin de l'expression
+                expression = expression.strip()
+
+                # Vérification de la syntaxe
+                try:
+                    compile(expression, '<string>', 'eval')
+                except SyntaxError:
+                    print("Erreur de syntaxe pour le calcul:", expression)
+                    continue  # Passer à l'expression suivante en cas d'erreur
+
+                # Évaluation de l'expression
+                try:
+                    resultat = eval(expression)
+                    # Arrondir le résultat à deux chiffres après la virgule si nécessaire
+                    if isinstance(resultat, float):
+                        resultat = round(resultat, 2)
+                    print(f"{resultat}")
+                except ZeroDivisionError:
+                    print("Division par zéro impossible.")
+
+    except EOFError:
+        # Affichage du message d'au revoir
+        print("\nFin des calculs :)")
+
+if __name__ == "__main__":
+    main()
